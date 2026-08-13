@@ -48,7 +48,7 @@
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 /* USER CODE BEGIN PFP */
-
+void GPIO_Init(void);
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -97,6 +97,8 @@ int main(void)
   /* Initialize all configured peripherals */
   /* USER CODE BEGIN 2 */
 
+  GPIO_Init();
+
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -104,7 +106,10 @@ int main(void)
   while (1)
   {
     /* USER CODE END WHILE */
-
+    GPIOC -> ODR |= (1u << 13);
+    LL_mDelay(100);
+    GPIOC -> ODR &= ~(1u << 13);
+    LL_mDelay(100);
     /* USER CODE BEGIN 3 */
   }
   /* USER CODE END 3 */
@@ -150,7 +155,22 @@ void SystemClock_Config(void)
 }
 
 /* USER CODE BEGIN 4 */
+void GPIO_Init() {
+  
+  LL_APB2_GRP1_EnableClock(LL_APB2_GRP1_PERIPH_GPIOC);
 
+  LL_GPIO_InitTypeDef InitStruct = {0};
+
+  InitStruct.Pin = LL_GPIO_PIN_13;
+  InitStruct.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
+  InitStruct.Mode=LL_GPIO_MODE_OUTPUT;
+  InitStruct.Speed=LL_GPIO_SPEED_FREQ_HIGH;
+
+  LL_GPIO_Init(GPIOC, &InitStruct);
+
+  LL_GPIO_ResetOutputPin(GPIOC, LL_GPIO_PIN_13);
+
+}
 /* USER CODE END 4 */
 
 /**
