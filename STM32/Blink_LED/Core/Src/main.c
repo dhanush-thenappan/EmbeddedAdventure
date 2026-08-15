@@ -106,10 +106,12 @@ int main(void)
   while (1)
   {
     /* USER CODE END WHILE */
-    GPIOC -> ODR |= (1u << 13);
-    LL_mDelay(100);
-    GPIOC -> ODR &= ~(1u << 13);
-    LL_mDelay(100);
+    GPIOC->BSRR = 1 << (13 + 16); // Reset
+    LL_mDelay(1000);
+    
+    GPIOC->BSRR = 1 << 13; //Set
+    LL_mDelay(1000);
+
     /* USER CODE BEGIN 3 */
   }
   /* USER CODE END 3 */
