@@ -106,13 +106,11 @@ int main(void)
   while (1)
   {
     /* USER CODE END WHILE */
-    if (GPIOA -> IDR & 1U) {
-      GPIOC -> BSRR = 1 << 13;
-    }
-    else {
-      GPIOC -> BRR = 1 <<13;
-    }
-    LL_mDelay(100);
+    GPIOB -> ODR |= (1 << 9);
+    LL_mDelay(1000);
+    
+    GPIOB -> ODR &= ~(1 << 9);
+    LL_mDelay(1000);
     /* USER CODE BEGIN 3 */
   }
   /* USER CODE END 3 */
@@ -160,31 +158,19 @@ void SystemClock_Config(void)
 /* USER CODE BEGIN 4 */
 void GPIO_Init() {
   
-  LL_APB2_GRP1_EnableClock(LL_APB2_GRP1_PERIPH_GPIOC);
+  LL_APB2_GRP1_EnableClock(LL_APB2_GRP1_PERIPH_GPIOB);
   
   LL_GPIO_InitTypeDef InitStruct = {0};
   
-  InitStruct.Pin = LL_GPIO_PIN_13;
-  InitStruct.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
+  InitStruct.Pin = LL_GPIO_PIN_9;
+  InitStruct.OutputType = LL_GPIO_OUTPUT_OPENDRAIN;
   InitStruct.Mode=LL_GPIO_MODE_OUTPUT;
   InitStruct.Speed=LL_GPIO_SPEED_FREQ_HIGH;
   
-  LL_GPIO_Init(GPIOC, &InitStruct);
+  LL_GPIO_Init(GPIOB, &InitStruct);
   
-  LL_GPIO_ResetOutputPin(GPIOC, LL_GPIO_PIN_13);
+  LL_GPIO_ResetOutputPin(GPIOB, LL_GPIO_PIN_9);
   
-  // InitStruct.Pin = LL_GPIO_PIN_1;
-  // InitStruct.Mode = LL_GPIO_MODE_INPUT;
-  // InitStruct.Speed = LL_GPIO_SPEED_FREQ_HIGH;
-  // InitStruct.Pull = LL_GPIO_PULL_UP;
-  
-  // 23 22 21 20
-  LL_APB2_GRP1_EnableClock(LL_APB2_GRP1_PERIPH_GPIOA);
-  GPIOA -> CRL = 0b1000 << 0; // Input pull-up/down
-  GPIOA -> ODR |= 1U << 0; // Input Pull up
-  // GPIOA -> ODR &= ~(1U << 0); // Input Pull down
-  // LL_GPIO_Init(GPIOA, &InitStruct);
-
 }
 /* USER CODE END 4 */
 
